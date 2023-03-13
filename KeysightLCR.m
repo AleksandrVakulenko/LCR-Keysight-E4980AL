@@ -12,12 +12,15 @@ classdef KeysightLCR < handle
     %--------------------------------PUBLIC--------------------------------
     methods (Access = public)
         function obj = KeysightLCR()
-            close_all_KeysightLCR();
-            obj.visa_dev = connect();
-            if isempty(obj.visa_dev)
+            vias_adr = find_E4980AL();
+            if ~isempty(vias_adr)
+%                 'USB0::0x2A8D::0x2F01::MY54305367::INSTR'
+                obj.visa_dev = visa('keysight',vias_adr); %visadev is shit
+
+            else
                 error('connection error');
             end
-%             set(obj.visa_dev, 'Timeout', 4)
+
         end
         
         function delete(obj)
@@ -26,23 +29,23 @@ classdef KeysightLCR < handle
 
     
         function volt_out = set_volt(obj, volt_in)
-            writeline(obj.visa_dev, [':VOLTage:LEVel ' num2str(volt_in)]);
-            response = writeread(obj.visa_dev, ':VOLTage:LEVel?');
+            obj.send(obj.visa_dev, [':VOLTage:LEVel ' num2str(volt_in)]);
+            response = obj.query(obj.visa_dev, ':VOLTage:LEVel?');
             data = sscanf(response, '%f');
             volt_out = data(1);
         end
 
 
         function freq_out = set_freq(obj, freq_in)
-            writeline(obj.visa_dev, [':FREQuency:CW ' num2str(freq_in)]);
-            response = writeread(obj.visa_dev, ':FREQuency:CW?');
+            obj.send(obj.visa_dev, [':FREQuency:CW ' num2str(freq_in)]);
+            response = obj.query(obj.visa_dev, ':FREQuency:CW?');
             data = sscanf(response, '%f');
             freq_out = data(1);
         end
 
 
         function [cap_re, tan_d] = get_cap(obj) % FIXME: placeholder
-            response = writeread(obj.visa_dev, ':FETCh:IMPedance:CORrected?');
+            response = obj.query(obj.visa_dev, ':FETCh:IMPedance:CORrected?');
             data = sscanf(response, '%f,%f');
             cap_re = data(1);
             tan_d = data(2);
@@ -50,19 +53,10 @@ classdef KeysightLCR < handle
 
 
         function [res_re, res_im] = get_res(obj) % FIXME: placeholder
-%             response = writeread(obj.visa_dev, ':FETCh:IMPedance:FORmatted?');
-%             data = sscanf(response, '%f,%f');
-%             res_re = data(1);
-%             res_im = data(2);
-
-            writeline(obj.visa_dev, ':FETCh:IMPedance:FORmatted?');
-            pause(0.2); %FIXME: magic constant
-            response = readline(obj.visa_dev);
+            response = obj.query(obj.visa_dev, ':FETCh:IMPedance:FORmatted?');
             data = sscanf(response, '%f,%f');
             res_re = data(1);
             res_im = data(2);
-
-            flush(obj.visa_dev);
         end
     end
     
@@ -73,7 +67,18 @@ classdef KeysightLCR < handle
     end
     
     methods (Access = private)
+        function send(ojb, dev, CMD)
+            fopen(dev);
+            fprintf(dev, CMD);
+            fclose(dev);
+        end
 
+        function response = query(obj, dev, CMD)
+            fopen(dev);
+            fprintf(dev, CMD);
+            response = fscanf(dev);
+            fclose(dev);
+        end
     end
     
 end

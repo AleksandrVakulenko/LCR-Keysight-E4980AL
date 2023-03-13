@@ -135,10 +135,10 @@ dev_old = visa('keysight','USB0::0x2A8D::0x2F01::MY54305367::INSTR')
 % idn = fscanf(dev_old)
 
 CMD = ":FETCh:IMPedance:FORmatted?"
-function responce = query(dev_old, CMD)
+function response = query(dev_old, CMD)
     fopen(dev_old)
     fprintf(dev_old, CMD)
-    responce = fscanf(dev_old)
+    response = fscanf(dev_old)
     fclose(dev_old)
 end
 
