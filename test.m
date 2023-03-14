@@ -75,8 +75,8 @@ lcr_dev.set_freq(1011);
 
 disp('start')
 for i = 1:5
-lcr_dev.get_res
-% lcr_dev.get_cap
+res = lcr_dev.get_res
+% [a,b] = lcr_dev.get_cap
 
 end
 

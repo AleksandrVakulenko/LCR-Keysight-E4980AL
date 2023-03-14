@@ -44,7 +44,7 @@ classdef KeysightLCR < handle
         end
 
 
-        function [cap_re, tan_d] = get_cap(obj) % FIXME: placeholder
+        function [cap_re, tan_d] = get_res(obj) % FIXME: placeholder
             response = obj.query(obj.visa_dev, ':FETCh:IMPedance:CORrected?');
             data = sscanf(response, '%f,%f');
             cap_re = data(1);
@@ -52,7 +52,7 @@ classdef KeysightLCR < handle
         end
 
 
-        function [res_re, res_im] = get_res(obj) % FIXME: placeholder
+        function [res_re, res_im] = get_cap(obj) % FIXME: placeholder
             response = obj.query(obj.visa_dev, ':FETCh:IMPedance:FORmatted?');
             data = sscanf(response, '%f,%f');
             res_re = data(1);
