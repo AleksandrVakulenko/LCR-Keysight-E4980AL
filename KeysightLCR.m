@@ -15,7 +15,7 @@ classdef KeysightLCR < handle
             vias_adr = find_E4980AL();
             if ~isempty(vias_adr)
 %                 'USB0::0x2A8D::0x2F01::MY54305367::INSTR'
-                obj.visa_dev = visa('keysight',vias_adr); %visadev is shit
+                obj.visa_dev = visa('ni',vias_adr); %visadev is shit
 
             else
                 error('connection error');
