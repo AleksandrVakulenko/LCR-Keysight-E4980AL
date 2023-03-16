@@ -15,7 +15,8 @@ classdef KeysightLCR < handle
             vias_adr = find_E4980AL();
             if ~isempty(vias_adr)
 %                 'USB0::0x2A8D::0x2F01::MY54305367::INSTR'
-                obj.visa_dev = visa('ni',vias_adr); %visadev is shit
+				%TODO: add variants on VISA vendor
+                obj.visa_dev = visa('ni',vias_adr); %new visadev is bad, we use old
 
             else
                 error('connection error');
