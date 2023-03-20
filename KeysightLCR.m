@@ -1,12 +1,7 @@
 
-% TODO:
-%  1) 
-%  2) 
 
-
-% To find all FIXME, TODO, NOTE use:
-% dofixrpt('Ammeter.m','file') -> find notes in file
-% dofixrpt(dir) -> find notes in all files in directory 'dir'
+% dofixrpt('Ammeter.m','file')
+% dofixrpt(dir)
 
 classdef KeysightLCR < handle
     %--------------------------------PUBLIC--------------------------------
@@ -25,7 +20,8 @@ classdef KeysightLCR < handle
         end
         
         function delete(obj)
-            disp("DELETED"); %FIXME: debug
+%             delete(obj.visa_dev); %FIXME: use it or not?
+%             disp("DELETED"); %UNUSED
         end
 
     
@@ -45,7 +41,7 @@ classdef KeysightLCR < handle
         end
 
 
-        function [cap_re, tan_d] = get_res(obj) % FIXME: placeholder
+        function [cap_re, tan_d] = get_res(obj)
             response = obj.query(obj.visa_dev, ':FETCh:IMPedance:CORrected?');
             data = sscanf(response, '%f,%f');
             cap_re = data(1);
@@ -53,7 +49,7 @@ classdef KeysightLCR < handle
         end
 
 
-        function [res_re, res_im] = get_cap(obj) % FIXME: placeholder
+        function [res_re, res_im] = get_cap(obj)
             response = obj.query(obj.visa_dev, ':FETCh:IMPedance:FORmatted?');
             data = sscanf(response, '%f,%f');
             res_re = data(1);
