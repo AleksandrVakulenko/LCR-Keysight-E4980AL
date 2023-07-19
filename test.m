@@ -70,13 +70,13 @@ clc
 
 lcr_dev = KeysightLCR();
 
-lcr_dev.set_volt(1.2);
+lcr_dev.set_volt(0.95);
 lcr_dev.set_freq(1011);
 
 disp('start')
 for i = 1:5
 res = lcr_dev.get_res
-% [a,b] = lcr_dev.get_cap
+[C, D] = lcr_dev.get_cap
 
 end
 
