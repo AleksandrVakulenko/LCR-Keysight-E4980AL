@@ -20,8 +20,8 @@ classdef KeysightLCR < handle
         end
         
         function delete(obj)
-%             delete(obj.visa_dev); %FIXME: use it or not?
-%             disp("DELETED"); %UNUSED
+             delete(obj.visa_dev); %FIXME: use it or not?
+             disp("KeysightLCR DELETED"); %UNUSED
         end
 
     
@@ -55,6 +55,24 @@ classdef KeysightLCR < handle
             res_re = data(1);
             res_im = data(2);
         end
+
+
+        function set_speed(obj, arg, count)
+            count = uint8(count);
+            switch lower(arg)
+                case 's'
+                    CMD = [':APERture SHORt, ' num2str(count)];
+                case 'm'
+                    CMD = [':APERture MEDium, ' num2str(count)];
+                case 'l'
+                    CMD = [':APERture LONG, ' num2str(count)];
+                otherwise
+                    CMD = ':APERture MEDium, ';
+            end
+            obj.send(obj.visa_dev, CMD);
+        end
+
+
     end
     
     %-------------------------------PRIVATE--------------------------------
