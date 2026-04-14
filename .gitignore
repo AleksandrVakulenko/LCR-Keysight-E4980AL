@@ -1,4 +1,5 @@
 Results/
 *.py
+*.mat
 *.asv
 *local_memo*.txt

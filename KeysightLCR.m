@@ -39,19 +39,19 @@ classdef KeysightLCR < handle
         end
 
 
-        function [cap_re, tan_d] = get_res(obj)
+        function [res_re, res_im] = get_res(obj)
             response = obj.query(obj.visa_dev, ':FETCh:IMPedance:CORrected?');
-            data = sscanf(response, '%f,%f');
-            cap_re = data(1);
-            tan_d = data(2);
-        end
-
-
-        function [res_re, res_im] = get_cap(obj)
-            response = obj.query(obj.visa_dev, ':FETCh:IMPedance:FORmatted?');
             data = sscanf(response, '%f,%f');
             res_re = data(1);
             res_im = data(2);
+        end
+
+
+        function [cap_re, tan_d] = get_cap(obj)
+            response = obj.query(obj.visa_dev, ':FETCh:IMPedance:FORmatted?');
+            data = sscanf(response, '%f,%f');
+            cap_re = data(1);
+            tan_d = data(2);
         end
 
 
@@ -117,7 +117,7 @@ end
             if any(ind == ind2)
                 vias_adr = dev_table.ResourceName(ind2);
             else
-                Str = adev_utils.get_dev_list_str(dev_table);
+                Str = get_dev_list_str(dev_table);
                 error(['No device "' char(name) '"' ' with SN:' ...
                     char(SerialNumber) ' in list: ' newline Str]);
             end
@@ -125,13 +125,13 @@ end
             if numel(ind) == 1
                 vias_adr = dev_table.ResourceName(ind);
             else
-                Str = adev_utils.get_dev_list_str(dev_table);
+                Str = get_dev_list_str(dev_table);
                 error(['the choice of device ' '"' char(name) '"' ...
                     ' is ambiguous:' newline Str]);
             end
         end
     else
-        Str = adev_utils.get_dev_list_str(dev_table);
+        Str = get_dev_list_str(dev_table);
         error(['No device "' char(name) '" in list: ' newline Str]);
     end
 
