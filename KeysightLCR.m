@@ -7,7 +7,7 @@ classdef KeysightLCR < handle
             arguments
                 Serial_number = []
             end
-            [vias_adr, SN] = adev_utils.find_visa_dev_by_name("E4980AL", Serial_number);
+            [vias_adr, SN] = find_visa_dev_by_name("E4980AL", Serial_number);
             if ~isempty(vias_adr)
 				%TODO: add variants on VISA vendor
                 obj.visa_dev = visa('ni', vias_adr); %new visadev is bad, we use old
@@ -100,26 +100,60 @@ end
 
 
 
-function close_all_KeysightLCR()
-input_class_name = 'KeysightLCR';
-baseVariables = evalin('base' , 'whos');
-Indexes = string({baseVariables.class}) == input_class_name;
-Var_names = string({baseVariables.name});
-Var_names = Var_names(Indexes);
-Valid = zeros(size(Var_names));
-for i = 1:numel(Var_names)
-    Valid(i) = evalin('base', ['isvalid(' char(Var_names(i)) ')']);
+
+
+function [vias_adr, SerialNumber] = find_visa_dev_by_name(name, SerialNumber)
+arguments
+    name string
+    SerialNumber = [];
 end
-Valid = logical(Valid);
-Var_names = Var_names(Valid);
-for i = 1:numel(Var_names)
-    evalin('base', ['delete(' char(Var_names(i)) ')']);
+    dev_table = visadevlist;
+    ind = find(dev_table.Model == name);
+
+    if ~isempty(ind)
+        if ~isempty(SerialNumber)
+            SerialNumber = string(SerialNumber);
+            ind2 = find(dev_table.SerialNumber == SerialNumber);
+            if any(ind == ind2)
+                vias_adr = dev_table.ResourceName(ind2);
+            else
+                Str = adev_utils.get_dev_list_str(dev_table);
+                error(['No device "' char(name) '"' ' with SN:' ...
+                    char(SerialNumber) ' in list: ' newline Str]);
+            end
+        else % no SERIAL NUMBER is provided:
+            if numel(ind) == 1
+                vias_adr = dev_table.ResourceName(ind);
+            else
+                Str = adev_utils.get_dev_list_str(dev_table);
+                error(['the choice of device ' '"' char(name) '"' ...
+                    ' is ambiguous:' newline Str]);
+            end
+        end
+    else
+        Str = adev_utils.get_dev_list_str(dev_table);
+        error(['No device "' char(name) '" in list: ' newline Str]);
+    end
+
 end
+
+
+function Str = get_dev_list_str(dev_table)
+    arguments
+        dev_table = [];
+    end
+
+    if isempty(dev_table)
+        dev_table = visadevlist;
+    end
+    Str = '';
+    for i = 1:size(dev_table, 1)
+        Str = [Str num2str(i) '| ' ...
+               char(dev_table{i, "Vendor"}) ' | ' ...
+               char(dev_table{i, "Model"})  ' | ' ...
+               char(dev_table{i, "SerialNumber"}) newline];
+    end
 end
-
-
-
-
 
 
 

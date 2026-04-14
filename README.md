@@ -3,6 +3,8 @@ Legacy repository: now moved to
 of
 [Fern](https://github.com/AleksandrVakulenko/Fern)
 
+__This repository will be deleted after 31 dec 2026__
+
 Class for software instrument control.
 
 Device: __Keysight LCR E4980__
