@@ -11,8 +11,9 @@
 
 clc
 
+Fern.load('aDevice');
 
-vias_adr = find_E4980AL()
+[vias_adr, SN] = adev_utils.find_visa_dev_by_name("E4980AL", Serial_number);
 
 if vias_adr ~= ""
     
@@ -88,7 +89,7 @@ end
 clc
 
 
-vias_adr = find_E4980AL()
+% vias_adr = find_E4980AL() LEGACY
 
 dev = visadev(vias_adr);
 [tf, status] = visastatus(dev)
@@ -122,7 +123,7 @@ disp(line)
 clc
 
 
-vias_adr = find_E4980AL()
+% vias_adr = find_E4980AL() LEGACY
 
 
 %%

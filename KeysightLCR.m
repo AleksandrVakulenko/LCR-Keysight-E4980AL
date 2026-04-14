@@ -1,23 +1,21 @@
 
 
-% dofixrpt('Ammeter.m','file')
-% dofixrpt(dir)
-
 classdef KeysightLCR < handle
     %--------------------------------PUBLIC--------------------------------
     methods (Access = public)
-        function obj = KeysightLCR()
-            vias_adr = find_E4980AL();
+        function obj = KeysightLCR(Serial_number)
+            arguments
+                Serial_number = []
+            end
+            [vias_adr, SN] = adev_utils.find_visa_dev_by_name("E4980AL", Serial_number);
             if ~isempty(vias_adr)
-%                 'USB0::0x2A8D::0x2F01::MY54305367::INSTR'
 				%TODO: add variants on VISA vendor
-                obj.visa_dev = visa('ni',vias_adr); %new visadev is bad, we use old
-
+                obj.visa_dev = visa('ni', vias_adr); %new visadev is bad, we use old
             else
                 error('connection error');
             end
-
         end
+
         
         function delete(obj)
              delete(obj.visa_dev); %FIXME: use it or not?
