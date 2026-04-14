@@ -1,4 +1,4 @@
-
+Results/
 *.py
 *.asv
-Results/
+*local_memo*.txt
