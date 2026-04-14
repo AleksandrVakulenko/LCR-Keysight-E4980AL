@@ -9,9 +9,13 @@
 
 % USB0::0x2A8D::0x2F01::MY54305367::INSTR
 
-clc
+
 
 Fern.load('aDevice');
+
+%%
+
+clc
 
 [vias_adr, SN] = adev_utils.find_visa_dev_by_name("E4980AL", Serial_number);
 
